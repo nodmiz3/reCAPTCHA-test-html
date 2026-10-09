@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ログイン</title>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+
+<h2>ログイン</h2>
+
+<input type="text" id="username" placeholder="ユーザー名">
+<input type="password" id="password" placeholder="パスワード">
+
+<!-- ロボットではありません -->
+<div class="g-recaptcha" data-sitekey="6LfHnectAAAAADsAn9nSqLhKNr4UNjKzDwiZrYsT"></div>
+
+<button onclick="login()">ログイン</button>
+
+<script>
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+
+  const savedUser = localStorage.getItem("user");
+  const savedPass = localStorage.getItem("pass");
+
+  // reCAPTCHA チェック
+  const recaptcha = grecaptcha.getResponse();
+  if (!recaptcha) {
+    alert("reCAPTCHA を完了してください");
+    return;
+  }
+
+  // ログイン判定
+  if (user === savedUser && pass === savedPass) {
+    localStorage.setItem("loggedin", "true");
+    window.location.href = "home.html";
+  } else {
+    alert("ユーザー名またはパスワードが違います");
+  }
+}
+</script>
+
+</body>
+</html>
