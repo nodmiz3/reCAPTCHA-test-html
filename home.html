@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ホーム</title>
+</head>
+<body>
+
+<script>
+// ログインしていなければ index.html に戻す
+if (localStorage.getItem("loggedin") !== "true") {
+  window.location.href = "index.html";
+}
+</script>
+
+<h1>ログイン成功！</h1>
+<p>ようこそ、みずき。</p>
+
+<button onclick="logout()">ログアウト</button>
+
+<script>
+function logout() {
+  localStorage.removeItem("loggedin");
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
