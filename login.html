@@ -22,22 +22,26 @@ function login() {
   const user = document.getElementById("username").value;
   const pass = document.getElementById("password").value;
 
-  // reCAPTCHA チェック
   const recaptcha = grecaptcha.getResponse();
   if (!recaptcha) {
     alert("reCAPTCHA を完了してください");
     return;
   }
 
-  // ユーザー一覧を取得
   let users = JSON.parse(localStorage.getItem("users")) || [];
-
-  // 一致するユーザーを探す
   const found = users.find(u => u.username === user && u.password === pass);
 
   if (found) {
     localStorage.setItem("loggedin", "true");
     localStorage.setItem("currentUser", user);
+
+    // 管理者判定
+    if (user === "nodmiz3admin") {
+      localStorage.setItem("isAdmin", "true");
+    } else {
+      localStorage.removeItem("isAdmin");
+    }
+
     window.location.href = "home.html";
   } else {
     alert("ユーザー名またはパスワードが違います");
