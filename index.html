@@ -22,9 +22,20 @@ function register() {
     return;
   }
 
-  // localStorage に保存
-  localStorage.setItem("user", user);
-  localStorage.setItem("pass", pass);
+  // 既存ユーザー一覧を取得（なければ空配列）
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  // 同じユーザー名が存在するかチェック
+  if (users.some(u => u.username === user)) {
+    alert("このユーザー名は既に登録されています");
+    return;
+  }
+
+  // 新規ユーザーを追加
+  users.push({ username: user, password: pass });
+
+  // 保存
+  localStorage.setItem("users", JSON.stringify(users));
 
   alert("登録完了！ログイン画面へ移動します");
   window.location.href = "login.html";
