@@ -12,17 +12,21 @@
 <input type="text" id="username" placeholder="ユーザー名">
 <input type="password" id="password" placeholder="パスワード">
 
-<!-- ロボットではありません -->
 <div class="g-recaptcha" data-sitekey="6LfHnectAAAAADsAn9nSqLhKNr4UNjKzDwiZrYsT"></div>
 
 <button onclick="login()">ログイン</button>
 
-<!-- 🔗 新規登録ページへのリンク -->
-<p>
-  <a href="https://nodmiz3.github.io/reCAPTCHA-test-html">新規登録はこちら</a>
-</p>
+<!-- 新規登録はこちら -->
+<p><a href="index.html">新規登録はこちら</a></p>
+
+<!-- 🔙 戻るボタン（登録ページへ） -->
+<button onclick="goBack()">戻る</button>
 
 <script>
+function goBack() {
+  window.location.href = "index.html";
+}
+
 function login() {
   const user = document.getElementById("username").value;
   const pass = document.getElementById("password").value;
@@ -40,7 +44,6 @@ function login() {
     localStorage.setItem("loggedin", "true");
     localStorage.setItem("currentUser", user);
 
-    // 管理者判定
     if (user === "nodmiz3admin") {
       localStorage.setItem("isAdmin", "true");
     } else {
