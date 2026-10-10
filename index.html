@@ -3,19 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <title>ユーザー登録</title>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --scale: 1;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-size: calc(16px * var(--scale));
+      padding: 20px;
+      font-family: sans-serif;
+    }
+    input, button, a {
+      font-size: calc(16px * var(--scale));
+    }
+  </style>
 </head>
 <body>
 
+<script>
+// テーマとスケール適用
+function applyTheme() {
+  const theme = localStorage.getItem("theme");
+  if (theme === "dark") {
+    document.documentElement.style.setProperty("--bg", "#222");
+    document.documentElement.style.setProperty("--text", "#fff");
+  } else if (theme === "blue") {
+    document.documentElement.style.setProperty("--bg", "#e3f2fd");
+    document.documentElement.style.setProperty("--text", "#0d47a1");
+  } else {
+    document.documentElement.style.setProperty("--bg", "#fff");
+    document.documentElement.style.setProperty("--text", "#000");
+  }
+}
+function applyScale() {
+  const scale = localStorage.getItem("scale") || "1";
+  document.documentElement.style.setProperty("--scale", scale);
+}
+applyTheme();
+applyScale();
+
+// SHA-256 ハッシュ化
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+// 初期管理者登録
+(async () => {
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  if (!users.some(u => u.username === "nodmiz3admin")) {
+    const adminHash = await hashPassword("nodmiz3admin0315");
+    users.push({ username: "nodmiz3admin", password: adminHash });
+    localStorage.setItem("users", JSON.stringify(users));
+  }
+})();
+</script>
+
 <h2>ユーザー登録</h2>
 
-<input type="text" id="username" placeholder="ユーザー名">
-<input type="password" id="password" placeholder="パスワード">
+<input type="text" id="username" placeholder="ユーザー名"><br><br>
+<input type="password" id="password" placeholder="パスワード"><br><br>
 <button onclick="register()">登録</button>
 
-<!-- ログインページへ -->
 <p><a href="login.html">ログインページへ移動する</a></p>
-
-<!-- 🔙 戻るボタン（ログインへ） -->
 <button onclick="goBack()">戻る</button>
 
 <script>
@@ -23,14 +80,7 @@ function goBack() {
   window.location.href = "login.html";
 }
 
-// 初期管理者を登録（存在しない場合のみ）
-let users = JSON.parse(localStorage.getItem("users")) || [];
-if (!users.some(u => u.username === "nodmiz3admin")) {
-  users.push({ username: "nodmiz3admin", password: "nodmiz3admin0315" });
-  localStorage.setItem("users", JSON.stringify(users));
-}
-
-function register() {
+async function register() {
   const user = document.getElementById("username").value;
   const pass = document.getElementById("password").value;
 
@@ -46,7 +96,9 @@ function register() {
     return;
   }
 
-  users.push({ username: user, password: pass });
+  const hashed = await hashPassword(pass);
+
+  users.push({ username: user, password: hashed });
   localStorage.setItem("users", JSON.stringify(users));
 
   alert("登録完了！ログイン画面へ移動します");
