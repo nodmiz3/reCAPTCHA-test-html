@@ -7,7 +7,6 @@
 <body>
 
 <script>
-// ログインしていなければログイン画面へ
 if (localStorage.getItem("loggedin") !== "true") {
   window.location.href = "login.html";
 }
@@ -17,7 +16,7 @@ if (localStorage.getItem("loggedin") !== "true") {
 
 <p>ようこそ、<span id="user"></span> さん。</p>
 
-<!-- ユーザー一覧ページへのリンク -->
+<!-- 誰でも見れるユーザー一覧 -->
 <p>
   <a href="users.html">ユーザー一覧を見る</a>
 </p>
@@ -30,6 +29,7 @@ document.getElementById("user").innerText = localStorage.getItem("currentUser");
 function logout() {
   localStorage.removeItem("loggedin");
   localStorage.removeItem("currentUser");
+  localStorage.removeItem("isAdmin");
   window.location.href = "login.html";
 }
 </script>
