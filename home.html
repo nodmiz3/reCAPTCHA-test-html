@@ -25,10 +25,12 @@
 <body>
 
 <script>
+// ログインチェック
 if (localStorage.getItem("loggedin") !== "true") {
   window.location.href = "login.html";
 }
 
+// テーマとスケール適用
 function applyTheme() {
   const theme = localStorage.getItem("theme");
   if (theme === "dark") {
