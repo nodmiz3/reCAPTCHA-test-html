@@ -4,22 +4,69 @@
   <meta charset="UTF-8">
   <title>ログイン</title>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --scale: 1;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-size: calc(16px * var(--scale));
+      padding: 20px;
+      font-family: sans-serif;
+    }
+    input, button, a {
+      font-size: calc(16px * var(--scale));
+    }
+  </style>
 </head>
 <body>
 
+<script>
+// テーマとスケール適用
+function applyTheme() {
+  const theme = localStorage.getItem("theme");
+  if (theme === "dark") {
+    document.documentElement.style.setProperty("--bg", "#222");
+    document.documentElement.style.setProperty("--text", "#fff");
+  } else if (theme === "blue") {
+    document.documentElement.style.setProperty("--bg", "#e3f2fd");
+    document.documentElement.style.setProperty("--text", "#0d47a1");
+  } else {
+    document.documentElement.style.setProperty("--bg", "#fff");
+    document.documentElement.style.setProperty("--text", "#000");
+  }
+}
+function applyScale() {
+  const scale = localStorage.getItem("scale") || "1";
+  document.documentElement.style.setProperty("--scale", scale);
+}
+applyTheme();
+applyScale();
+
+// SHA-256 ハッシュ化
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+}
+</script>
+
 <h2>ログイン</h2>
 
-<input type="text" id="username" placeholder="ユーザー名">
-<input type="password" id="password" placeholder="パスワード">
+<input type="text" id="username" placeholder="ユーザー名"><br><br>
+<input type="password" id="password" placeholder="パスワード"><br><br>
 
-<div class="g-recaptcha" data-sitekey="6LfHnectAAAAADsAn9nSqLhKNr4UNjKzDwiZrYsT"></div>
+<div class="g-recaptcha" data-sitekey="6LfHnectAAAAADsAn9nSqLhKNr4UNjKzDwiZrYsT"></div><br>
 
 <button onclick="login()">ログイン</button>
 
-<!-- 新規登録はこちら -->
 <p><a href="index.html">新規登録はこちら</a></p>
-
-<!-- 🔙 戻るボタン（登録ページへ） -->
 <button onclick="goBack()">戻る</button>
 
 <script>
@@ -27,7 +74,7 @@ function goBack() {
   window.location.href = "index.html";
 }
 
-function login() {
+async function login() {
   const user = document.getElementById("username").value;
   const pass = document.getElementById("password").value;
 
@@ -38,7 +85,10 @@ function login() {
   }
 
   let users = JSON.parse(localStorage.getItem("users")) || [];
-  const found = users.find(u => u.username === user && u.password === pass);
+
+  const hashedInput = await hashPassword(pass);
+
+  const found = users.find(u => u.username === user && u.password === hashedInput);
 
   if (found) {
     localStorage.setItem("loggedin", "true");
@@ -51,6 +101,7 @@ function login() {
     }
 
     window.location.href = "home.html";
+
   } else {
     alert("ユーザー名またはパスワードが違います");
   }
