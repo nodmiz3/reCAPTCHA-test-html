@@ -3,6 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <title>ホーム</title>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --scale: 1;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-size: calc(16px * var(--scale));
+      padding: 20px;
+      font-family: sans-serif;
+    }
+    a, button {
+      font-size: calc(16px * var(--scale));
+    }
+  </style>
 </head>
 <body>
 
@@ -10,6 +28,26 @@
 if (localStorage.getItem("loggedin") !== "true") {
   window.location.href = "login.html";
 }
+
+function applyTheme() {
+  const theme = localStorage.getItem("theme");
+  if (theme === "dark") {
+    document.documentElement.style.setProperty("--bg", "#222");
+    document.documentElement.style.setProperty("--text", "#fff");
+  } else if (theme === "blue") {
+    document.documentElement.style.setProperty("--bg", "#e3f2fd");
+    document.documentElement.style.setProperty("--text", "#0d47a1");
+  } else {
+    document.documentElement.style.setProperty("--bg", "#fff");
+    document.documentElement.style.setProperty("--text", "#000");
+  }
+}
+function applyScale() {
+  const scale = localStorage.getItem("scale") || "1";
+  document.documentElement.style.setProperty("--scale", scale);
+}
+applyTheme();
+applyScale();
 </script>
 
 <h1>ログイン成功！</h1>
@@ -17,14 +55,14 @@ if (localStorage.getItem("loggedin") !== "true") {
 <p>ようこそ、<span id="user"></span> さん。</p>
 
 <p><a href="users.html">ユーザー一覧を見る</a></p>
+<p><a href="settings.html">設定ページへ</a></p>
 
 <button onclick="logout()">ログアウト</button>
-
-<!-- 🔙 戻るボタン（ログインへ） -->
 <button onclick="goBack()">戻る</button>
 
 <script>
-document.getElementById("user").innerText = localStorage.getItem("currentUser");
+let name = localStorage.getItem("displayName") || localStorage.getItem("currentUser");
+document.getElementById("user").innerText = name;
 
 function logout() {
   localStorage.removeItem("loggedin");
