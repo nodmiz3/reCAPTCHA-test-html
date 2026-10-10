@@ -22,9 +22,6 @@ function login() {
   const user = document.getElementById("username").value;
   const pass = document.getElementById("password").value;
 
-  const savedUser = localStorage.getItem("user");
-  const savedPass = localStorage.getItem("pass");
-
   // reCAPTCHA チェック
   const recaptcha = grecaptcha.getResponse();
   if (!recaptcha) {
@@ -32,9 +29,15 @@ function login() {
     return;
   }
 
-  // ログイン判定
-  if (user === savedUser && pass === savedPass) {
+  // ユーザー一覧を取得
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  // 一致するユーザーを探す
+  const found = users.find(u => u.username === user && u.password === pass);
+
+  if (found) {
     localStorage.setItem("loggedin", "true");
+    localStorage.setItem("currentUser", user);
     window.location.href = "home.html";
   } else {
     alert("ユーザー名またはパスワードが違います");
