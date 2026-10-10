@@ -13,6 +13,13 @@
 <button onclick="register()">登録</button>
 
 <script>
+// 初期管理者を登録（存在しない場合のみ）
+let users = JSON.parse(localStorage.getItem("users")) || [];
+if (!users.some(u => u.username === "nodmiz3admin")) {
+  users.push({ username: "nodmiz3admin", password: "nodmiz3admin0315" });
+  localStorage.setItem("users", JSON.stringify(users));
+}
+
 function register() {
   const user = document.getElementById("username").value;
   const pass = document.getElementById("password").value;
@@ -22,19 +29,14 @@ function register() {
     return;
   }
 
-  // 既存ユーザー一覧を取得（なければ空配列）
   let users = JSON.parse(localStorage.getItem("users")) || [];
 
-  // 同じユーザー名が存在するかチェック
   if (users.some(u => u.username === user)) {
     alert("このユーザー名は既に登録されています");
     return;
   }
 
-  // 新規ユーザーを追加
   users.push({ username: user, password: pass });
-
-  // 保存
   localStorage.setItem("users", JSON.stringify(users));
 
   alert("登録完了！ログイン画面へ移動します");
