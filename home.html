@@ -16,12 +16,12 @@ if (localStorage.getItem("loggedin") !== "true") {
 
 <p>ようこそ、<span id="user"></span> さん。</p>
 
-<!-- 誰でも見れるユーザー一覧 -->
-<p>
-  <a href="users.html">ユーザー一覧を見る</a>
-</p>
+<p><a href="users.html">ユーザー一覧を見る</a></p>
 
 <button onclick="logout()">ログアウト</button>
+
+<!-- 🔙 戻るボタン（ログインへ） -->
+<button onclick="goBack()">戻る</button>
 
 <script>
 document.getElementById("user").innerText = localStorage.getItem("currentUser");
@@ -30,6 +30,10 @@ function logout() {
   localStorage.removeItem("loggedin");
   localStorage.removeItem("currentUser");
   localStorage.removeItem("isAdmin");
+  window.location.href = "login.html";
+}
+
+function goBack() {
   window.location.href = "login.html";
 }
 </script>
