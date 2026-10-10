@@ -7,21 +7,25 @@
 <body>
 
 <script>
-// ログインしていなければ index.html に戻す
+// ログインしていなければログイン画面へ
 if (localStorage.getItem("loggedin") !== "true") {
-  window.location.href = "index.html";
+  window.location.href = "login.html";
 }
 </script>
 
 <h1>ログイン成功！</h1>
-<p>ようこそ、みずき。</p>
+
+<p>ようこそ、<span id="user"></span> さん。</p>
 
 <button onclick="logout()">ログアウト</button>
 
 <script>
+document.getElementById("user").innerText = localStorage.getItem("currentUser");
+
 function logout() {
   localStorage.removeItem("loggedin");
-  window.location.href = "index.html";
+  localStorage.removeItem("currentUser");
+  window.location.href = "login.html";
 }
 </script>
 
