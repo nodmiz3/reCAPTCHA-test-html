@@ -12,12 +12,17 @@
 <input type="password" id="password" placeholder="パスワード">
 <button onclick="register()">登録</button>
 
-<!-- 🔗 ログインページへのリンクを追加 -->
-<p>
-  <a href="login.html">ログインページへ移動する</a>
-</p>
+<!-- ログインページへ -->
+<p><a href="login.html">ログインページへ移動する</a></p>
+
+<!-- 🔙 戻るボタン（ログインへ） -->
+<button onclick="goBack()">戻る</button>
 
 <script>
+function goBack() {
+  window.location.href = "login.html";
+}
+
 // 初期管理者を登録（存在しない場合のみ）
 let users = JSON.parse(localStorage.getItem("users")) || [];
 if (!users.some(u => u.username === "nodmiz3admin")) {
