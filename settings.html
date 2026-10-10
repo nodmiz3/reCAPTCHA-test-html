@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>設定ページ</title>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --scale: 1;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-size: calc(16px * var(--scale));
+      padding: 20px;
+      font-family: sans-serif;
+    }
+
+    select, input {
+      font-size: calc(16px * var(--scale));
+      padding: 8px;
+      margin-bottom: 15px;
+      width: 250px;
+    }
+
+    button {
+      font-size: calc(16px * var(--scale));
+      padding: 10px 20px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>設定ページ</h2>
+
+<!-- 名前設定 -->
+<label>表示名：</label><br>
+<input type="text" id="displayName"><br>
+
+<!-- テーマ設定 -->
+<label>テーマ：</label><br>
+<select id="theme">
+  <option value="light">ライト</option>
+  <option value="dark">ダーク</option>
+  <option value="blue">ブルー</option>
+</select><br>
+
+<!-- UIスケール設定 -->
+<label>UIスケール：</label><br>
+<select id="scale">
+  <option value="1">標準</option>
+  <option value="1.2">大</option>
+  <option value="1.4">特大</option>
+</select><br>
+
+<button onclick="saveSettings()">保存</button>
+<button onclick="goBack()">戻る</button>
+
+<script>
+// 設定読み込み
+window.onload = () => {
+  document.getElementById("displayName").value = localStorage.getItem("displayName") || "";
+  document.getElementById("theme").value = localStorage.getItem("theme") || "light";
+  document.getElementById("scale").value = localStorage.getItem("scale") || "1";
+
+  applyTheme();
+  applyScale();
+};
+
+// 保存処理
+function saveSettings() {
+  localStorage.setItem("displayName", document.getElementById("displayName").value);
+  localStorage.setItem("theme", document.getElementById("theme").value);
+  localStorage.setItem("scale", document.getElementById("scale").value);
+
+  alert("設定を保存しました");
+  applyTheme();
+  applyScale();
+}
+
+// テーマ反映
+function applyTheme() {
+  const theme = localStorage.getItem("theme");
+
+  if (theme === "light") {
+    document.documentElement.style.setProperty("--bg", "#ffffff");
+    document.documentElement.style.setProperty("--text", "#000000");
+  }
+  if (theme === "dark") {
+    document.documentElement.style.setProperty("--bg", "#222222");
+    document.documentElement.style.setProperty("--text", "#ffffff");
+  }
+  if (theme === "blue") {
+    document.documentElement.style.setProperty("--bg", "#e3f2fd");
+    document.documentElement.style.setProperty("--text", "#0d47a1");
+  }
+}
+
+// UIスケール反映
+function applyScale() {
+  const scale = localStorage.getItem("scale") || "1";
+  document.documentElement.style.setProperty("--scale", scale);
+}
+
+function goBack() {
+  window.location.href = "home.html";
+}
+</script>
+
+</body>
+</html>
