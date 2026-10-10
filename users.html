@@ -8,7 +8,7 @@
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
     th { background: #f0f0f0; }
-    button { padding: 6px 12px; margin-left: 10px; }
+    button { padding: 6px 12px; }
   </style>
 </head>
 <body>
@@ -25,11 +25,13 @@
   <tbody id="userTable"></tbody>
 </table>
 
-<script>
-// localStorage からユーザー一覧を取得
-let users = JSON.parse(localStorage.getItem("users")) || [];
+<!-- 🔙 戻るボタン（ホームへ） -->
+<button onclick="goBack()">戻る</button>
 
-// テーブルに表示
+<script>
+let users = JSON.parse(localStorage.getItem("users")) || [];
+let isAdmin = localStorage.getItem("isAdmin") === "true";
+
 function loadUsers() {
   const table = document.getElementById("userTable");
   table.innerHTML = "";
@@ -40,7 +42,7 @@ function loadUsers() {
     row.innerHTML = `
       <td>${u.username}</td>
       <td>
-        <button onclick="deleteUser(${index})">削除</button>
+        ${isAdmin ? `<button onclick="deleteUser(${index})">削除</button>` : `削除不可`}
       </td>
     `;
 
@@ -48,13 +50,16 @@ function loadUsers() {
   });
 }
 
-// ユーザー削除機能
 function deleteUser(index) {
   if (!confirm("このユーザーを削除しますか？")) return;
 
   users.splice(index, 1);
   localStorage.setItem("users", JSON.stringify(users));
   loadUsers();
+}
+
+function goBack() {
+  window.location.href = "home.html";
 }
 
 loadUsers();
