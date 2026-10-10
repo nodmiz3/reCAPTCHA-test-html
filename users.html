@@ -3,15 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <title>ユーザー一覧</title>
+
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-    th { background: #f0f0f0; }
-    button { padding: 6px 12px; }
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --scale: 1;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-size: calc(16px * var(--scale));
+      padding: 20px;
+      font-family: sans-serif;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    button {
+      font-size: calc(16px * var(--scale));
+    }
   </style>
 </head>
 <body>
+
+<script>
+// テーマとスケール適用
+function applyTheme() {
+  const theme = localStorage.getItem("theme");
+  if (theme === "dark") {
+    document.documentElement.style.setProperty("--bg", "#222");
+    document.documentElement.style.setProperty("--text", "#fff");
+  } else if (theme === "blue") {
+    document.documentElement.style.setProperty("--bg", "#e3f2fd");
+    document.documentElement.style.setProperty("--text", "#0d47a1");
+  } else {
+    document.documentElement.style.setProperty("--bg", "#fff");
+    document.documentElement.style.setProperty("--text", "#000");
+  }
+}
+function applyScale() {
+  const scale = localStorage.getItem("scale") || "1";
+  document.documentElement.style.setProperty("--scale", scale);
+}
+applyTheme();
+applyScale();
+</script>
 
 <h2>ユーザー一覧</h2>
 
@@ -25,7 +68,6 @@
   <tbody id="userTable"></tbody>
 </table>
 
-<!-- 🔙 戻るボタン（ホームへ） -->
 <button onclick="goBack()">戻る</button>
 
 <script>
@@ -41,9 +83,7 @@ function loadUsers() {
 
     row.innerHTML = `
       <td>${u.username}</td>
-      <td>
-        ${isAdmin ? `<button onclick="deleteUser(${index})">削除</button>` : `削除不可`}
-      </td>
+      <td>${isAdmin ? `<button onclick="deleteUser(${index})">削除</button>` : `削除不可`}</td>
     `;
 
     table.appendChild(row);
