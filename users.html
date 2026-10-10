@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ユーザー一覧</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    th { background: #f0f0f0; }
+    button { padding: 6px 12px; margin-left: 10px; }
+  </style>
+</head>
+<body>
+
+<h2>ユーザー一覧</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>ユーザー名</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody id="userTable"></tbody>
+</table>
+
+<script>
+// localStorage からユーザー一覧を取得
+let users = JSON.parse(localStorage.getItem("users")) || [];
+
+// テーブルに表示
+function loadUsers() {
+  const table = document.getElementById("userTable");
+  table.innerHTML = "";
+
+  users.forEach((u, index) => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${u.username}</td>
+      <td>
+        <button onclick="deleteUser(${index})">削除</button>
+      </td>
+    `;
+
+    table.appendChild(row);
+  });
+}
+
+// ユーザー削除機能
+function deleteUser(index) {
+  if (!confirm("このユーザーを削除しますか？")) return;
+
+  users.splice(index, 1);
+  localStorage.setItem("users", JSON.stringify(users));
+  loadUsers();
+}
+
+loadUsers();
+</script>
+
+</body>
+</html>
